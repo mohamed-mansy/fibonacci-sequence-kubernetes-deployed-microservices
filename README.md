@@ -117,7 +117,7 @@ npm start
 # from repo root (example names)
 docker build -t your-dockerhub-username/fibonacci-client:latest ./client
 docker build -t your-dockerhub-username/fibonacci-server:latest ./server
-docker build -t your-dockerhub-username/fibonacci-worker:latest ./server/worker
+docker build -t your-dockerhub-username/fibonacci-worker:latest ./worker
 ```
 
 Push to your container registry and update the images in `k8s/` manifests.
