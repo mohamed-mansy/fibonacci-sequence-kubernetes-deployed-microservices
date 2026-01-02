@@ -44,9 +44,4 @@ jobs:
           sudo mv kubectl /usr/local/bin/
 
       - run: kubectl apply -f ./k8s_on_aws/namespace.yml
-      - run: kubectl apply -f ./k8s_on_aws/database-persistent-volume-claim.yml
-      - run: kubectl apply -f ./k8s_on_aws/*deployment*.yml
-      - run: kubectl apply -f ./k8s_on_aws/*service*.yml
-      - run: kubectl apply -f ./k8s_on_aws/ingress-class.yml
-      - run: kubectl apply -f ./k8s_on_aws/pod-info-ingress.yml
-      - run: kubectl apply -f ./k8s_on_aws/load-balancer-controller.yml
+      - run: kubectl apply -f ./k8s_on_aws/
