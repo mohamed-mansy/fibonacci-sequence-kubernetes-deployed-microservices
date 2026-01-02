@@ -46,18 +46,7 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
-<<<<<<< HEAD
-      - name: Create Postgres secret
-        run: |
-          kubectl create secret generic pgpassword --from-literal=PGPASSWORD=${{ secrets.PG_PASSWORD }} -n production
-          kubectl get secret pgpassword -n production
-
-      - run: kubectl apply -f ./k8s_on_aws/namespace.yml
-
-      - run: kubectl apply -f ./k8s_on_aws/
-=======
       - run: kubectl apply -f ./k8s_on_aws/namespace.yml
       # Create Postgres secret
       - run: kubectl create secret generic pgpassword --from-literal=PGPASSWORD=${{ secrets.PG_PASSWORD }} -n production
       - run: kubectl apply -f ./k8s_on_aws/
->>>>>>> dae601c (deploy our microservices app to aws EKS cluster)
