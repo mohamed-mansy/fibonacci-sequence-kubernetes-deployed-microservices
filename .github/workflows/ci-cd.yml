@@ -36,6 +36,9 @@ jobs:
           aws eks update-kubeconfig \
             --region eu-north-1 \
             --name microservices-eks-cluster
+
+      - name: Check you are connected to the correct EKS cluster
+        run: kubectl config current-context
       
       - name: Install kubectl
         run: |
@@ -45,7 +48,8 @@ jobs:
 
       - name: Create Postgres secret
         run: |
-          kubectl create secret generic pgpassword --from-literal=PGPASSWORD=${{ secrets.PG_PASSWORD }} -n production
+          kubectl create secret generic pgpassword --from-literal PGPASSWORD=${{ secrets.PG_PASSWORD }} -n production
+          kubectl get secret pgpassword -n production
 
       - run: kubectl delete -f ./k8s_on_aws/
       - run: kubectl apply -f ./k8s_on_aws/namespace.yml
