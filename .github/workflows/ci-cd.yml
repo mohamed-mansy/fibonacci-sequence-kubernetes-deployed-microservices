@@ -10,20 +10,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       
       # build images of microservices
       - run: docker build -t moka12/multi-client ./client
       - run: docker build -t moka12/multi-server ./server
-      - run: docker build -t moka12/multi-nginx ./nginx
       - run: docker build -t moka12/multi-worker ./worker
 
       # push the images to docker hub
       - run: docker push moka12/multi-client
       - run: docker push moka12/multi-server
       - run: docker push moka12/multi-worker
-      - run: docker push moka12/multi-nginx
 
       # deploy to kubernetes cluster in aws
       - name: Configure AWS credentials
