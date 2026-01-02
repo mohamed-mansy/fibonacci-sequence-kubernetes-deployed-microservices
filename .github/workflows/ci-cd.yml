@@ -1,0 +1,42 @@
+name: deploy our microservices app to aws EKS cluster
+
+# Trigger the workflow on push request events but only for the master branch
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
+      # build images of microservices
+      - run: docker build -t moka12/multi-client ./client
+      - run: docker build -t moka12/multi-server ./server
+      - run: docker build -t moka12/multi-nginx ./nginx
+      - run: docker build -t moka12/multi-worker ./worker
+
+      # push the images to docker hub
+      - run: docker push moka12/multi-client
+      - run: docker push moka12/multi-server
+      - run: docker push moka12/multi-worker
+      - run: docker push moka12/multi-nginx
+
+      # deploy to kubernetes cluster in aws
+      - uses: manusa/actions-aws-eks@v2.2.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+          cluster-name: microservices-eks-cluster
+
+      - run: kubectl apply -f ./k8s_on_aws/namespace.yml
+      - run: kubectl apply -f ./k8s_on_aws/database-persistent-volume-claim.yml
+      - run: kubectl apply -f ./k8s_on_aws/*deployment*.yml
+      - run: kubectl apply -f ./k8s_on_aws/*service*.yml
+      - run: kubectl apply -f ./k8s_on_aws/ingress-class.yml
+      - run: kubectl apply -f ./k8s_on_aws/pod-info-ingress.yml
+      - run: kubectl apply -f ./k8s_on_aws/load-balancer-controller.yml

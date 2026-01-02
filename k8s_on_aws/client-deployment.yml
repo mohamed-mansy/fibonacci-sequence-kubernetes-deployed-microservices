@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: client-deployment
+  namespace: production
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       component: web
@@ -16,8 +17,13 @@ spec:
       - name: client
         image: moka12/multi-client
         ports:
-<<<<<<< HEAD
         - containerPort: 3000
-=======
-        - containerPort: 3000
->>>>>>> 2e25703 (upload the eks cluster and the manifast files will deploy my app into aws)
+        resources:
+          requests: # minimum guaranteed resources
+            cpu: "250m" # m = millicores
+            memory: "256Mi" 
+          limits: # maximum allowed resources
+            cpu: "500m"
+            memory: "512Mi"
+          
+        
