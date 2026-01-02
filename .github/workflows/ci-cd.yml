@@ -43,5 +43,10 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
+      - name: Create Postgres secret
+        run: |
+          kubectl create secret generic pgpassword --from-literal=PGPASSWORD=${{ secrets.PG_PASSWORD }} -n production
+
+      - run: kubectl delete -f ./k8s_on_aws/
       - run: kubectl apply -f ./k8s_on_aws/namespace.yml
       - run: kubectl apply -f ./k8s_on_aws/
